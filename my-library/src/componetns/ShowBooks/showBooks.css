@@ -1,0 +1,10 @@
+.book-list {
+    margin-left: 20px;
+    margin-top:  20px;
+    display: flex;
+  }
+  
+  .book-list ul{
+      list-style-type: none;
+  }
+  
