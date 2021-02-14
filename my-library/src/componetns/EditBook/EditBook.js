@@ -1,27 +1,55 @@
 import { Form, Button } from "react-bootstrap";
-import "./addBook.css";
-import { ADD_BOOK, CHANGE_FIELD} from "../../store/actions"
 import { genresList } from "../genresList";
-import React from "react";
+import React, { useState } from "react";
 
-export const AddBook = ({setMainState, id ,title, author, genre, year, url ,text }) => {
+export const EditBook = ({setMainState, editChoose }) => {
+
+    let current = new Date();  
+    let jsData = JSON.parse(localStorage.getItem("books"));
+    let book = (!jsData)? null: jsData.filter( data => {
+
+       return data.id === editChoose[1]
+    })
+
+    const [title, setTitle] = useState(book[0].title)
+    const [author, setAuthor] = useState(book[0].author)
+    const [url, setUrl] = useState(book[0].url)
+    const [year, setYear] = useState(book[0].year)
+    const [genre, setGenre] = useState(book[0].genre)
 
 
+    const handleEdit = () => {
 
+        book[0].title = title
+        book[0].author = author
+        book[0].url = url
+        book[0].year = year
+        book[0].genre = genre  
 
-    let current = new Date();
-
-    const handleSubmit = () => {
-
-        setMainState(ADD_BOOK, { id ,title, author, genre, year, url ,text});
+        localStorage.setItem("books", JSON.stringify(jsData));
+    
     }
 
     const handleChange = ({ target: { name, value } }) => {
-        const data = JSON.parse(localStorage.getItem('books'))
-        let max = (!data)? null : data.reduce((acc, curr) => acc.id > curr.id ? acc : curr);
-
-        setMainState(CHANGE_FIELD, { id: (data)? max.id + 1: 1 })    
-        setMainState(CHANGE_FIELD, { [name]: value });
+        switch ( name ){
+            case 'title': 
+                setTitle(value)
+                break;
+            case 'author': 
+                setAuthor(value)
+                break;
+            case 'url': 
+                setUrl(value)
+                break;
+            case 'year': 
+                setYear(value)
+                break;
+            case 'genre': 
+                setGenre(value)
+                break;
+            default:
+                break;
+        }
     };
 
     const genresListMaped = genresList.map(el => {
@@ -33,14 +61,14 @@ export const AddBook = ({setMainState, id ,title, author, genre, year, url ,text
 
     return (
         <div>
-        <Form className="form" onSubmit={handleSubmit}>
+        <Form className="form" onClick={handleEdit}>
             <Form.Group className="form-group">
                 <Form.Label>Title</Form.Label>
                 <Form.Control className="form-control" name="title" type="text" placeholder="Title of book" value={title}  onChange={handleChange}/>
             </Form.Group>
             <Form.Group className="form-group">
                 <Form.Label>Author</Form.Label>
-                <Form.Control  className="form-control" name="author" type="text" placeholder="Author" value={author} onChange={handleChange.bind(author)}/>
+                <Form.Control  className="form-control" name="author" type="text" placeholder="Author" value={author} onChange={handleChange}/>
             </Form.Group>
             <Form.Group className="form-group">
                 <Form.Label>The year of publishing</Form.Label>
@@ -53,18 +81,14 @@ export const AddBook = ({setMainState, id ,title, author, genre, year, url ,text
             <Form.Group className="form-group">
                 <Form.Label>Genre</Form.Label>
                 <Form.Control  className="form-control" name='genre' as="select" placeholder="Genre" onChange={handleChange} required>
-                    <option value="Default" onChange={handleChange}>
-                        Default
+                    <option value={genre} onChange={handleChange}>
+                        {book[0].genre}
                     </option>
                     {genresListMaped}
                 </Form.Control>
             </Form.Group>
-            <Form.Group className="form-group">
-                <Form.Label>Text</Form.Label>
-                <Form.Control className="form-control text-input" name="text" as="textarea" rows={5} placeholder="Text" onChange={handleChange}/>
-            </Form.Group>
-            <Button className="button" variant="primary" type="submit">
-                Submit
+            <Button className="button" variant="primary" type="button">
+                Edit
             </Button>
         </Form>
         </div>

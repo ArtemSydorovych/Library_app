@@ -1,10 +1,10 @@
 import { connect } from "react-redux";
 import { setMainState } from "../../store/actions";
-import { ShowBooks } from "./ShowBooks";
+import { EditBook } from "./EditBook"
 
 const mapStateToProps = state => state
 const mapDispatchToProps = dispatch => ({ 
     setMainState: (type, payload) => dispatch(setMainState(type, payload)) 
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(ShowBooks)
+export default connect(mapStateToProps, mapDispatchToProps)(EditBook)

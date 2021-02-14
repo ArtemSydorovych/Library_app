@@ -1,74 +1,39 @@
-import React, { useEffect } from "react";
+import React from "react";
 import "./nav.css";
-import { Navbar, Form, FormControl, Button, ListGroup, NavDropdown } from "react-bootstrap";
+import { Navbar, Form, FormControl, ListGroup, NavDropdown } from "react-bootstrap";
 import { Link, Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 import AddBook from "../AddBook";
-import showBooks from "../ShowBooks";
+import ShowBooks from "../ShowBooks";
 import { CHANGE_FIELD } from "../../store/actions";
-import history from "../../history"
+import { genresList } from "../genresList";
+import ReadBook from "../ReadBook";
+import EditBook from "../EditBook";
 
- const genresList = ["Fantasy",
-        "Adventure",
-        "Romance",
-        "Contemporary",
-        "Dystopian",
-        "Mystery",
-        "Horror",
-        "Thriller",
-        "Paranormal",
-        "Historical fiction",
-        "Science Fiction",
-        "Memoir",
-        "Cooking",
-        "Art",
-        "Self-help / Personal",
-        "Development",
-        "Motivational",
-        "Health",
-        "History",
-        "Travel",
-        "Guide / How-to",
-        "Families & Relationships",
-        "Humor",
-        "Children’s"]
+export const Naviagation = ({ setMainState, genreSearch, search, readChoose, editChoose }) => {
 
- 
-
-export const Naviagation = ({ setMainState, genreSearch, search }) => {
-
-    const handleClickOnGenre = ({ target: {name, value }}) => {
-        console.log(genreSearch);
-        setMainState(CHANGE_FIELD, { [name]: value});
-        console.log(genreSearch);
-
-    };
+    let jsData = JSON.parse(localStorage.getItem("books"));
 
 
-
-    const homeClick = () => {
-        setMainState(CHANGE_FIELD, {genreSearch: ''});
-    }
-    
-
-    useEffect(() => {
-        document.title = genreSearch;
-      });
-  
-    const genresListMaped = genresList.map(el => {
-    return(
-    <ListGroup.Item action onClick={handleClickOnGenre} name="genreSearch" value={el}>
-        {el}
-    </ListGroup.Item>
-  )
-  })
-
-    const handleSubmitSearch = () => {
-
-    }
-    
     const handleChange = ({ target: { name, value } }) => {
         setMainState(CHANGE_FIELD, { [name]: value });
     };
+
+    const onGenreClick = event => {
+        setMainState(CHANGE_FIELD, { genreSearch: event.target.name })
+    };
+
+    const homeClick = () => {
+        setMainState(CHANGE_FIELD, { genreSearch: '' });
+        setMainState(CHANGE_FIELD, { search: '' });
+        setMainState(CHANGE_FIELD, { readChoose: '' });
+    }
+    const genresListMaped = genresList.map(el => {
+        return (
+            <ListGroup.Item>
+                <Link key={el.id} onClick={onGenreClick} name={el} to={"/" + el}>{el}</Link>
+            </ListGroup.Item>
+        )
+    })
 
     return (
         <Router>
@@ -78,18 +43,24 @@ export const Naviagation = ({ setMainState, genreSearch, search }) => {
                 <Navbar.Brand><Link className="brand" to="/add-book">Add Book</Link></Navbar.Brand>
                 <NavDropdown title="Genres" id="basic-nav-dropdown">
                     <ListGroup >
-                    <Link to={"/"+genreSearch}>{genresListMaped}</Link>
+                        {genresListMaped}
                     </ListGroup>
                 </NavDropdown>
-                <Form inline style={{ marginLeft: "auto" }} onSubmit={handleSubmitSearch}>
+                <Form inline style={{ marginLeft: "auto" }}>
                     <FormControl value={search} name="search" type="text" placeholder="Search" className="mr-sm-2" onChange={handleChange.bind(search)} />
-                    <Button variant="outline-info">Search</Button>
                 </Form>
             </Navbar>
             <Switch>
                 <Route exact path="/add-book" component={AddBook} />
-                <Route exact path="/" component={showBooks} />
-                <Route exact path={"/"+genreSearch} component={showBooks} />
+                <Route exact path={"/" + genreSearch} component={ShowBooks} />
+                {(!jsData) ? null : jsData.map(data => {
+                    console.log(data.title);
+                    return <Route path={"/" + data.title} component={ReadBook}/>
+                })}
+                {(!jsData) ? null : jsData.map( (data, id) => {
+                   return <Route path={"/edit/" + data.title} component={EditBook} />
+                })}
+
             </Switch>
         </Router>
     );
