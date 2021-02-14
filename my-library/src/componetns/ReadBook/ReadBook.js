@@ -14,7 +14,6 @@ export const ReadBook = ({setMainState, readChoose}) => {
         sum += el.stars;
     });
     
-    console.log(sum)
     const [rating, setRating] = useState(sum/rates.length)
     const [comment, setComment] = useState("")
 
@@ -32,7 +31,6 @@ export const ReadBook = ({setMainState, readChoose}) => {
         }
       }; 
       const addReview = () => {
-          console.log(jsData[0].id)
           setMainState(RATE_BOOK, {idBook: jsData[0].id, stars: rating, comment: comment})
       }; 
 

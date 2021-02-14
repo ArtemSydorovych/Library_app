@@ -36,7 +36,6 @@ export const ShowBooks = ({
       : jsData.findIndex((data) => {
           return event.target.value === data.id.toString();
         });
-    console.log(book);
     if (book !== -1) {
       jsData.splice(book, 1);
       localStorage.setItem("books", JSON.stringify(jsData));
@@ -50,7 +49,6 @@ export const ShowBooks = ({
       : jsData.find((data) => {
         return event.target.value === data.id.toString();
         });
-    console.log(book);
     setMainState(CHANGE_FIELD, {editChoose: [book.title, book.id]})
     
     if (book !== -1) {
