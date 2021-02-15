@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./nav.css";
 import { Navbar, Form, FormControl, ListGroup, NavDropdown } from "react-bootstrap";
 import { Link, Route, BrowserRouter as Router, Switch } from 'react-router-dom';
@@ -9,9 +9,10 @@ import { genresList } from "../genresList";
 import ReadBook from "../ReadBook";
 import EditBook from "../EditBook";
 
-export const Naviagation = ({ setMainState, genreSearch, search, readChoose, editChoose }) => {
+export const Naviagation = ({ setMainState, search }) => {
 
     let jsData = JSON.parse(localStorage.getItem("books"));
+    const [genre, setGenre] = useState(sessionStorage.getItem("genre"))
 
 
     const handleChange = ({ target: { name, value } }) => {
@@ -19,13 +20,14 @@ export const Naviagation = ({ setMainState, genreSearch, search, readChoose, edi
     };
 
     const onGenreClick = event => {
-        setMainState(CHANGE_FIELD, { genreSearch: event.target.name })
+        setGenre(event.target.name)
+        sessionStorage.setItem("genre", event.target.name )
+
     };
 
     const homeClick = () => {
-        setMainState(CHANGE_FIELD, { genreSearch: '' });
         setMainState(CHANGE_FIELD, { search: '' });
-        setMainState(CHANGE_FIELD, { readChoose: '' });
+        sessionStorage.clear();
     }
     const genresListMaped = genresList.map(el => {
         return (
@@ -52,9 +54,9 @@ export const Naviagation = ({ setMainState, genreSearch, search, readChoose, edi
             </Navbar>
             <Switch>
                 <Route exact path="/add-book" component={AddBook} />
-                <Route exact path={"/" + genreSearch} component={ShowBooks} />
+                <Route exact path={"/"} component={ShowBooks} />
+                <Route exact path={"/" + genre} component={ShowBooks} />
                 {(!jsData) ? null : jsData.map(data => {
-                    console.log(data.title);
                     return <Route path={"/" + data.title} component={ReadBook}/>
                 })}
                 {(!jsData) ? null : jsData.map( (data, id) => {

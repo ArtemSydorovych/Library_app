@@ -18,7 +18,7 @@ export const AddBook = ({setMainState, id ,title, author, genre, year, url ,text
 
     const handleChange = ({ target: { name, value } }) => {
         const data = JSON.parse(localStorage.getItem('books'))
-        let max = (!data)? null : data.reduce((acc, curr) => acc.id > curr.id ? acc : curr);
+        let max = data? data.reduce((acc, curr) => acc.id > curr.id ? acc : curr): 1;
 
         setMainState(CHANGE_FIELD, { id: (data)? max.id + 1: 1 })    
         setMainState(CHANGE_FIELD, { [name]: value });

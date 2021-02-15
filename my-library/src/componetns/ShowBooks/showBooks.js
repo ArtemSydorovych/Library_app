@@ -1,23 +1,22 @@
 import React from "react";
 import { Button, ListGroup } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { CHANGE_FIELD } from "../../store/actions";
 import "./ShowBooks.css";
 
 export const ShowBooks = ({
-  setMainState,
-  genreSearch,
-  search,
+  search
 }) => {
-  let jsData = JSON.parse(localStorage.getItem("books"));
   const [state, setState] = React.useState("");
+  const genre = sessionStorage.getItem("genre")
+  let rates = JSON.parse(localStorage.getItem('rating'));
 
+  let jsData = JSON.parse(localStorage.getItem("books"));
   jsData = !jsData
     ? null
     : jsData.filter((data) => {
-        if (genreSearch && search)
+        if (genre && search)
           return (
-            data.genre === genreSearch &&
+            data.genre === genre &&
             (data.title.toLowerCase().includes(search.toLowerCase()) ||
               data.author.toLowerCase().includes(search.toLowerCase()))
           );
@@ -26,20 +25,27 @@ export const ShowBooks = ({
             data.title.toLowerCase().includes(search.toLowerCase()) ||
             data.author.toLowerCase().includes(search.toLowerCase())
           );
-        else if (genreSearch) return data.genre === genreSearch;
+        else if (genre) return data.genre === genre;
         else return data;
       });
 
   const deleteBook = (event) => {
     let book = !jsData
       ? null
-      : jsData.findIndex((data) => {
+      : jsData.find((data) => {
           return event.target.value === data.id.toString();
         });
+        console.log(book)
     if (book !== -1) {
+      rates = rates? rates.filter(data =>{
+        return data.idBook !== book.id
+      }): null
+      console.log(rates);
       jsData.splice(book, 1);
       localStorage.setItem("books", JSON.stringify(jsData));
-      setState(0);
+      localStorage.setItem("rating", JSON.stringify(rates));
+      
+      window.location.reload()
     }
   };
 
@@ -49,7 +55,8 @@ export const ShowBooks = ({
       : jsData.find((data) => {
         return event.target.value === data.id.toString();
         });
-    setMainState(CHANGE_FIELD, {editChoose: [book.title, book.id]})
+    sessionStorage.setItem("edit", JSON.stringify({"title": book.title ,"id": book.id}))
+
     
     if (book !== -1) {
       localStorage.setItem("books", JSON.stringify(jsData));
@@ -63,7 +70,7 @@ export const ShowBooks = ({
       : jsData.find((data) => {
           return value === data.title;
         });
-    setMainState(CHANGE_FIELD, { readChoose: [book.title, book.id] });
+    sessionStorage.setItem("read", JSON.stringify({"title": book.title ,"id": book.id}))
   };
 
   const listItems = !jsData

@@ -3,23 +3,26 @@ import { Button, Form, ListGroup } from 'react-bootstrap';
 import ReactStars from "react-rating-stars-component";
 import { RATE_BOOK } from '../../store/actions';
 
-export const ReadBook = ({setMainState, readChoose}) => {
+export const ReadBook = ({setMainState}) => {
 
+    let read = JSON.parse(sessionStorage.getItem("read"));
     let rates = JSON.parse(localStorage.getItem('rating'));
     rates = rates? rates.filter(data =>{
-       return data.idBook === readChoose[1]
+       return data.idBook === read.id
     }): null
     let sum = 0
-    rates.forEach( el => {
+    if(rates){
+        rates.forEach( el => {
         sum += el.stars;
     });
+    }
     
-    const [rating, setRating] = useState(sum/rates.length)
+    const [rating, setRating] = useState(rates? sum/(rates.length) : 0)
     const [comment, setComment] = useState("")
 
     let jsData = JSON.parse(localStorage.getItem("books"));
     jsData = (!jsData)? null: jsData.filter( data => {
-       return data.id === readChoose[1]
+       return data.id === read.id
 
     })
     const bookRate = {

@@ -2,13 +2,14 @@ import { Form, Button } from "react-bootstrap";
 import { genresList } from "../genresList";
 import React, { useState } from "react";
 
-export const EditBook = ({setMainState, editChoose }) => {
+export const EditBook = () => {
 
+    const edit = JSON.parse(sessionStorage.getItem("edit"));
     let current = new Date();  
     let jsData = JSON.parse(localStorage.getItem("books"));
     let book = (!jsData)? null: jsData.filter( data => {
 
-       return data.id === editChoose[1]
+       return data.id === edit.id
     })
 
     const [title, setTitle] = useState(book[0].title)

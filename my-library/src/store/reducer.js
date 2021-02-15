@@ -13,7 +13,6 @@ const initialState = {
     url:    '',
     search: '',
     editChoose: [],
-    readChoose: '',
     genreSearch: '',
     books:  data ? JSON.parse(data) : [],
     rating: rating ? JSON.parse(rating) : []
@@ -25,6 +24,7 @@ const reducer = (state = initialState, action) => {
         case ADD_BOOK:
             const body = [...state.books, payload]
             localStorage.setItem('books', JSON.stringify(body))
+            return { ...state, books: body }
         case RATE_BOOK:
             const rate = [...state.rating, payload]
             localStorage.setItem('rating', JSON.stringify(rate))
