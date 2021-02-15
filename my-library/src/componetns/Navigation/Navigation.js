@@ -41,7 +41,6 @@ export const Naviagation = ({ setMainState, search }) => {
         <Router>
             <Navbar bg="dark" >
                 <Navbar.Brand><Link onClick={homeClick} className="fa fa-home home" to="/"></Link></Navbar.Brand>
-                <Navbar.Brand><Link className="brand" to="/top-10">TOP-10</Link></Navbar.Brand>
                 <Navbar.Brand><Link className="brand" to="/add-book">Add Book</Link></Navbar.Brand>
                 <NavDropdown title="Genres" id="basic-nav-dropdown">
                     <ListGroup >

@@ -18,9 +18,15 @@ export const AddBook = ({setMainState, id ,title, author, genre, year, url ,text
 
     const handleChange = ({ target: { name, value } }) => {
         const data = JSON.parse(localStorage.getItem('books'))
-        let max = data? data.reduce((acc, curr) => acc.id > curr.id ? acc : curr): 1;
-
-        setMainState(CHANGE_FIELD, { id: (data)? max.id + 1: 1 })    
+        if ( data )
+        {
+            let max = (data.length) ? (data.reduce((acc, curr) => acc.id > curr.id ? acc.id : curr.id)) : 0;
+            console.log(max)
+            setMainState(CHANGE_FIELD, { id: (max)? max.id + 1: 1 })    
+        }
+        else{
+            setMainState(CHANGE_FIELD, { id: 1 })    
+        }
         setMainState(CHANGE_FIELD, { [name]: value });
     };
 

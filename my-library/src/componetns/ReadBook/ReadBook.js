@@ -34,7 +34,8 @@ export const ReadBook = ({setMainState}) => {
         }
       }; 
       const addReview = () => {
-          setMainState(RATE_BOOK, {idBook: jsData[0].id, stars: rating, comment: comment})
+            setMainState(RATE_BOOK, {idBook: jsData[0].id, stars: rating, comment: comment})
+            window.location.reload()
       }; 
 
       const handleChangeComment = event => {
